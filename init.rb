@@ -47,13 +47,3 @@ Redmine::Plugin.register :redmine_timesheet_extensions do
       })
 end
 
-
-
-
-# Hooks (attualmente non ce ne sono)
-
-# Aggiunta comportamento ai modelli esistenti (Patch)
-require 'time_entry_patch'
-Rails.configuration.to_prepare do
-  TimeEntry.send(:include, TimeEntryPatch) unless TimeEntry.included_modules.include?(TimeEntryPatch)
-end
