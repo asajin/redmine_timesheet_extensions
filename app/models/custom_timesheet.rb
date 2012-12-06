@@ -278,6 +278,7 @@ class CustomTimesheet
     csv_head.push(l(:label_member)) if @selected_fields.include?('user_id')
     csv_head.push(l(:label_activity)) if @selected_fields.include?('activity_id')
     csv_head.push(l(:label_project)) if @selected_fields.include?('project_id')
+    csv_head.push('Parent issue')
     if @selected_fields.include?('issue_id')
       csv_head.push(l(:label_issue))
       csv_head.push("#{l(:label_issue)} #{l(:field_subject)}")
@@ -290,6 +291,14 @@ class CustomTimesheet
   end
 
   def time_entry_to_csv(time_entry)
+
+    parent_issue = ''
+    ancestors = time_entry.issue.root? ? [] : time_entry.issue.ancestors.visible.all
+    ancestors.each do |ancestor|
+      parent_issue << (parent_issue.empty? ? '' : '->')
+      parent_issue << ancestor.tracker.name + ' #' + ancestor.id.to_s + ' ' + ancestor.subject
+    end
+
     csv_data = []
     
     csv_data.push(time_entry.id) if @selected_fields.include?('id')
@@ -298,6 +307,7 @@ class CustomTimesheet
     csv_data.push(time_entry.user.name) if @selected_fields.include?('user_id')
     csv_data.push(time_entry.activity.name) if @selected_fields.include?('activity_id')
     csv_data.push(time_entry.project.name) if @selected_fields.include?('project_id')
+    csv_data.push(parent_issue)
     csv_data.push("#{time_entry.issue.tracker.name} ##{time_entry.issue.id}") if @selected_fields.include?('issue_id') && time_entry.issue
     csv_data.push(time_entry.issue.subject) if @selected_fields.include?('issue_id') && time_entry.issue
     csv_data.push(time_entry.comments) if @selected_fields.include?('comments')
