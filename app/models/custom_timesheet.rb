@@ -171,11 +171,11 @@ class CustomTimesheet
     results = []
 
     # Recupero le time entry a seconda dei permessi che ha l'utente
-    if User.current.admin?
+#    if User.current.admin?
       results = fetch_all_time_entries self.users, sort
-    elsif self.users.detect { |user_id| user_id == User.current.id }
-      results = fetch_all_time_entries User.current.id, sort
-    end
+#    elsif self.users.detect { |user_id| user_id == User.current.id }
+#      results = fetch_all_time_entries User.current.id, sort
+#    end
 
     # Faccio il group by
     g = Grouer.new fields
